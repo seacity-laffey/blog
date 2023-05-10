@@ -13,6 +13,9 @@ const postsDirectory = join(process.cwd(), '_posts');
  */
 
 export const getPostBySlug = (slug: string, fields: string[] = []) => {
+  if (!fs.existsSync(postsDirectory)) {
+    return [];
+  }
   const fullPath = join(postsDirectory, slug.indexOf('.md') !== -1 ? slug : slug + '.md');
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
@@ -39,8 +42,10 @@ export const getPostBySlug = (slug: string, fields: string[] = []) => {
 };
 
 export function getAllPosts(fields: string[] = []) {
+  if (!fs.existsSync(postsDirectory)) {
+    return [];
+  }
   const slugs = fs.readdirSync(postsDirectory);
   const posts = slugs.map(slug => getPostBySlug(slug, fields));
   return posts;
 }
-
